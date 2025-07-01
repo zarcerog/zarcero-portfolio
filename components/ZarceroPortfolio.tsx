@@ -5,6 +5,8 @@ import FilmGrainOverlay from './textures/FilmGrainOverlay'
 import GlobalStyles from './layout/GlobalStyles'
 import LandingSection from './sections/LandingSection'
 import AboutSection from './sections/AboutSection'
+import ProjectsSection from './sections/ProjectsSection'
+import ProjectModal from './ui/ProjectModal'
 
 function ZarceroPortfolio() {
   return (
@@ -20,6 +22,10 @@ function ZarceroPortfolio() {
             {/* Sections */}
             <LandingSection />
             <AboutSection />
+            <ProjectsSection />
+
+            {/* Modals */}
+            <ProjectModal />
         </div>
     </PortfolioProvider>
   )
