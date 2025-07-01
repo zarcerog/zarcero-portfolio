@@ -8,6 +8,7 @@ import AboutSection from './sections/AboutSection'
 import ProjectsSection from './sections/ProjectsSection'
 import ProjectModal from './ui/ProjectModal'
 import NowSection from './sections/NowSection'
+import ContactSection from './sections/ContactSection'
 
 function ZarceroPortfolio() {
   return (
@@ -25,6 +26,7 @@ function ZarceroPortfolio() {
             <AboutSection />
             <ProjectsSection />
             <NowSection />
+            <ContactSection />
 
             {/* Modals */}
             <ProjectModal />
