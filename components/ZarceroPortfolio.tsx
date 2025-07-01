@@ -3,7 +3,8 @@ import React from 'react'
 import GrainyOverlay from './textures/GrainyOverlay'
 import FilmGrainOverlay from './textures/FilmGrainOverlay'
 import GlobalStyles from './layout/GlobalStyles'
-import LandingSection from './sections/landing'
+import LandingSection from './sections/LandingSection'
+import AboutSection from './sections/AboutSection'
 
 function ZarceroPortfolio() {
   return (
@@ -18,6 +19,7 @@ function ZarceroPortfolio() {
 
             {/* Sections */}
             <LandingSection />
+            <AboutSection />
         </div>
     </PortfolioProvider>
   )
