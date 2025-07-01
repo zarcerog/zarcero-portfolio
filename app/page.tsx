@@ -1,7 +1,10 @@
-export default function Page() {
-  return (
-    <div>
-      <h1>Welcome to my portfolio.</h1>
-    </div>
-  )
+"use client"
+
+import React from 'react'
+import ZarceroPortfolio from '@/components/ZarceroPortfolio'
+
+function Page() {
+  return <ZarceroPortfolio />
 }
+
+export default Page
