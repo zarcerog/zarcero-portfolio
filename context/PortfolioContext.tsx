@@ -52,8 +52,8 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
       description: "Modular dental ERP. Features: digital odontogram, patient records, scheduling, billing, and staff time tracking — all in one clean, unified interface.",
       tech: "React, Next.js, MongoDB",
       link: "#",
-      image: "/zarcero-portfolio/dentos.png",
-      gif: "/zarcero-portfolio/dentos.gif",
+      image: "/dentos.png",
+      gif: "/dentos.gif",
       longDescription:
         "DentOS is a modular web-based ERP platform built for modern dental practices. Designed with usability and scalability in mind, it offers core tools like a Digital Odontogram, Patient Management, Appointment Scheduling, Billing, and Time Reporting for clinic staff — all within a sleek, unified interface. Developed with React, Next.js, and a component-based architecture, DentOS brings together the clinical and operational sides of dentistry into one intuitive workspace.",
       features: [
@@ -71,8 +71,8 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
       description: "Memento is an app where users complete daily missions by sharing photos or videos.",
       tech: "React Native",
       link: "#",
-      image: "/zarcero-portfolio/memento.png",
-      gif: "/zarcero-portfolio/memento.gif",
+      image: "/memento.png",
+      gif: "/memento.gif",
       longDescription:
         `Memento is a React Native social app where users complete daily photo/video "missions" to document life creatively. I built a custom camera, integrated S3 media uploads, and designed a real-time feed where posts are linked to unique challenge types. The app handles image/video encoding, dynamic S3 storage, and contextual post display—all focused on self-expression.`,
       features: [
@@ -90,8 +90,8 @@ export const PortfolioProvider: React.FC<PortfolioProviderProps> = ({ children }
       description: "This portfolio website, showcasing my work and personality.",
       tech: "React, TypeScript, Tailwind CSS",
       link: "#",
-      image: "/zarcero-portfolio/portfolio.png",
-      gif: "/zarcero-portfolio/portfolio.gif",
+      image: "/portfolio.png",
+      gif: "/portfolio.gif",
       longDescription:
         "A portfolio that merges street aesthetics with modern web development. Features interactive peelable stickers, film grain textures, and gritty black-and-white design. Built with React, it proves professional work doesn't have to be corporate.",
       features: [

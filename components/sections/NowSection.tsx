@@ -23,7 +23,7 @@ const NowSection: React.FC = () => {
             onClick={() => handleStickerPeel(sticker)}
           >
             <img
-              src={`/zarcero-portfolio/stickers/${sticker}.png`}
+              src={`/stickers/${sticker}.png`}
               alt={`${index + 1}`}
               className="w-full h-52 object-cover transition-transform duration-300"
             />
