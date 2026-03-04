@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Barlow_Condensed, Space_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { TransitionProvider } from "@/context/TransitionContext";
 import "./globals.css";
 
@@ -65,6 +66,7 @@ export default function RootLayout({
         {/* Grain paper texture — fixed, above everything except cursor */}
         <div className="grain-layer" aria-hidden="true" />
         <TransitionProvider>{children}</TransitionProvider>
+        <Analytics />
       </body>
     </html>
   );
