@@ -282,13 +282,16 @@ html.locked {
 .manifesto {
   position: relative;
   background: #060606;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .manifesto-inner {
-  padding: clamp(6rem, 12vw, 12rem) clamp(2rem, 6vw, 8rem);
+  padding: 0 clamp(2rem, 6vw, 8rem);
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  height: 100%;
   gap: 0;
 }
 
