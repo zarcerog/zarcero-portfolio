@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "plantuml-ascii": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "2fb2b41487ea6559f4ccf877fe397c87214b35049528685ff1c02bb792b027d1"
+    }
+  }
+}
