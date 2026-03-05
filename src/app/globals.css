@@ -302,7 +302,7 @@ html.locked {
 .manifesto-line {
   display: block;
   font-family: var(--font-bebas), 'Impact', sans-serif;
-  font-size: clamp(10vw, 14vw, 16vw);
+  font-size: clamp(6vw, 9vw, 11vw);
   line-height: 0.87;
   letter-spacing: -0.01em;
   color: #2C2C2C; /* start dark — ghost state */
@@ -756,7 +756,7 @@ html.locked {
   }
 
   .manifesto-line {
-    font-size: clamp(14vw, 18vw, 22vw);
+    font-size: clamp(10vw, 13vw, 16vw);
   }
 
   .manifesto-line:nth-child(2),
