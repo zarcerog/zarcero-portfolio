@@ -14,12 +14,35 @@ export interface Project {
   gifPortrait?: boolean;
   accentColor: string;
   textAccent: string;
+  externalUrl?: string;
 }
 
 export const PROJECTS: Project[] = [
   {
+    slug: "studio-memoir",
+    number: "01 / 04",
+    title: "MEMOIR",
+    subtitle: "A journal on design culture",
+    year: "2025",
+    role: "Design · Editorial",
+    description:
+      "A personal journal exploring the intersections of music, architecture, and design — the frequencies that shape how we build and feel.",
+    story: [
+      "Design doesn't exist in a vacuum. It's shaped by the jazz records you listen to at 2 AM, the brutalist building you walk past every morning, the typography on a concert poster from 1967. Studio Memoir is where all of that lives.",
+      "It's a personal journal — part retrospective, part manifesto — about the culture underneath the craft. Music, architecture, design, and the invisible threads between them. Why Coltrane's phrasing mirrors good UI rhythm. How brutalism's honesty translates to interface design. What Ray Gun understood about typography that the rest of the industry still hasn't caught up to.",
+      "Built with Astro for content-first speed, layered with heavy GSAP animations that give every page transition and scroll moment real physical weight. The writing is slow, intentional, deeply personal — the kind that only happens when you stop optimizing and start observing.",
+    ],
+    stack: ["Astro", "GSAP", "TypeScript", "Tailwind"],
+    bg: "linear-gradient(160deg, #0A0A14 0%, #12101E 40%, #060606 100%)",
+    bgImage: "/studio-memoir.png",
+    bgGif: "/studio-memoir.gif",
+    accentColor: "#8B5CF6",
+    textAccent: "#A78BFA",
+    externalUrl: "https://zarcerog.studio",
+  },
+  {
     slug: "dentos",
-    number: "01 / 03",
+    number: "02 / 04",
     title: "DENTOS",
     subtitle: "Dental ERP system",
     year: "2024",
@@ -40,7 +63,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "memento",
-    number: "02 / 03",
+    number: "03 / 04",
     title: "MEMENTO",
     subtitle: "Daily photo missions",
     year: "2024",
@@ -62,7 +85,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "zarcerog",
-    number: "03 / 03",
+    number: "04 / 04",
     title: "ZARCEROG",
     subtitle: "This portfolio",
     year: "2025",

@@ -23,11 +23,14 @@
   padding: 0;
 }
 
+html, a, button, [role="button"], input, textarea, select, label, summary {
+  cursor: none !important;
+}
+
 html {
   background: #060606;
   color: #F0EBE0;
   overflow-x: hidden;
-  cursor: none; /* Custom cursor replaces */
 }
 
 body {
@@ -710,7 +713,7 @@ html.locked {
   .cursor-dot,
   .cursor-ring { display: none; }
 
-  html { cursor: auto; }
+  html, a, button, [role="button"], input, textarea, select, label, summary { cursor: auto !important; }
 
   .hero-name-line {
     font-size: clamp(22vw, 26vw, 30vw);

@@ -305,6 +305,27 @@ function ProjectContent({
               <p className="section-label" style={{ marginBottom: "0.75rem" }}>YEAR</p>
               <p style={{ fontFamily: "var(--font-spacemono)", fontSize: "0.8rem", color: "#F0EBE0", opacity: 0.45 }}>{project.year}</p>
             </div>
+            {project.externalUrl && (
+              <div style={{ borderTop: "1px solid #1A1A1A", paddingTop: "2rem", marginTop: "2rem" }}>
+                <a
+                  href={project.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontFamily: "var(--font-spacemono)",
+                    fontSize: "0.75rem",
+                    letterSpacing: "0.15em",
+                    color: project.accentColor,
+                    textDecoration: "none",
+                    borderBottom: `1px solid ${project.accentColor}`,
+                    paddingBottom: "2px",
+                    cursor: "none",
+                  }}
+                >
+                  VISIT SITE ↗
+                </a>
+              </div>
+            )}
           </div>
         </div>
 

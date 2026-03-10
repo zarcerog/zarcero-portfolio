@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description:
     "Creative developer building at the intersection of code, craft, and culture. Make it feel. Make it mean something. Keep it raw.",
   icons: {
-    icon: "/favicon.png",
+    icon: "/favicon.ico",
   },
   openGraph: {
     title: "Nicolas Zarcero — Creative Developer",

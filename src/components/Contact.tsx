@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 
 const LINKS = [
+  { label: "Studio", href: "https://zarcerog.studio" },
   { label: "GitHub", href: "https://github.com/zarcerog" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/zarcerog/" },
   { label: "Twitter", href: "https://twitter.com/zarcerog" },

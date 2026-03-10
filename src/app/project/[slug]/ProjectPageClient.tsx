@@ -8,6 +8,49 @@ import { usePageTransition } from "@/context/TransitionContext";
 
 // ─── Abstract visual panels ───────────────────────────────────────────
 
+function StudioMemoirVisuals() {
+  return (
+    <>
+      <div style={{ width: "100%", aspectRatio: "16/9", position: "relative", overflow: "hidden", background: "#0A0A14" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 50%, rgba(139,92,246,0.08) 0%, transparent 70%)" }} />
+        {/* Editorial grid lines */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.04) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+        {/* Stacked journal pages */}
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} style={{ width: "clamp(160px, 20vw, 240px)", height: "clamp(200px, 25vw, 300px)", border: "1px solid rgba(139,92,246,0.2)", background: `rgba(139,92,246,${0.02 + i * 0.02})`, position: "absolute", top: `${i * -8}px`, left: `${i * 8}px`, transform: `rotate(${-3 + i * 3}deg) translate(-50%, -50%)` }} />
+          ))}
+        </div>
+        <div style={{ position: "absolute", bottom: "2rem", left: "2rem" }}>
+          <p style={{ fontFamily: "var(--font-spacemono)", fontSize: "0.625rem", color: "#A78BFA", letterSpacing: "0.2em", opacity: 0.6 }}>MUSIC · ARCHITECTURE · DESIGN</p>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0 }}>
+        <div style={{ aspectRatio: "1", position: "relative", overflow: "hidden", background: "#08081A" }}>
+          {/* Sound wave bars */}
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", gap: "3px", padding: "2rem" }}>
+            {Array.from({ length: 24 }).map((_, i) => {
+              const h = 20 + Math.sin(i * 0.6) * 40 + Math.cos(i * 0.3) * 20;
+              return <div key={i} style={{ width: "3px", height: `${h}%`, background: `rgba(139,92,246,${0.15 + (h / 100) * 0.3})`, borderRadius: "2px" }} />;
+            })}
+          </div>
+          <div style={{ position: "absolute", bottom: "1.5rem", left: "2rem" }}>
+            <p style={{ fontFamily: "var(--font-spacemono)", fontSize: "0.625rem", color: "#A78BFA", letterSpacing: "0.2em", opacity: 0.5 }}>FREQUENCY</p>
+          </div>
+        </div>
+
+        <div style={{ aspectRatio: "1", position: "relative", overflow: "hidden", background: "#0C0A18" }}>
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2rem" }}>
+            <p style={{ fontFamily: "var(--font-spacemono)", fontSize: "0.6rem", color: "#A78BFA", letterSpacing: "0.2em", opacity: 0.5, marginBottom: "1rem" }}>LATEST ENTRY</p>
+            <p style={{ fontFamily: "var(--font-bebas)", fontSize: "clamp(1.5rem, 3vw, 3rem)", color: "#A78BFA", lineHeight: 0.9, opacity: 0.7 }}>THE CULTURE UNDERNEATH THE CRAFT.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 function DentosVisuals() {
   return (
     <>
@@ -138,6 +181,7 @@ function ZarcerogVisuals() {
 }
 
 const VISUALS: Record<string, React.FC> = {
+  "studio-memoir": StudioMemoirVisuals,
   dentos: DentosVisuals,
   memento: MementoVisuals,
   zarcerog: ZarcerogVisuals,

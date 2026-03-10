@@ -294,6 +294,29 @@ export default function Work({ onProjectClick }: { onProjectClick?: (slug: strin
                 >
                   VIEW PROJECT →
                 </button>
+                {project.externalUrl && (
+                  <a
+                    href={project.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="work-card-link"
+                    onMouseEnter={() => onHover(i)}
+                    onMouseLeave={onLeave}
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      borderBottom: "1px solid #FF2D00",
+                      cursor: "none",
+                      paddingBottom: "2px",
+                      textDecoration: "none",
+                      marginTop: "0.75rem",
+                      display: "block",
+                    }}
+                  >
+                    VISIT SITE ↗
+                  </a>
+                )}
               </div>
             </div>
           </div>
