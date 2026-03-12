@@ -59,8 +59,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${bebasNeue.variable} ${barlowCondensed.variable} ${spaceMono.variable}`}
       >
         {/* Grain paper texture — fixed, above everything except cursor */}
