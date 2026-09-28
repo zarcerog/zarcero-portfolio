@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { PLAYBILL } from "../content";
 import { useStage, useStageValue } from "../engine";
+import { cueSound } from "../sound/bus";
+import type { SoundProgram } from "../sound/program";
+import { SoundToggle } from "../sound/SoundToggle";
 import { ACTS as DEFAULT_ACTS, type ActMark } from "../timeline";
 
 function indexAt(acts: ActMark[], t: number) {
@@ -92,6 +95,7 @@ function Programme({ open, onClose, acts }: { open: boolean; onClose: () => void
                 type="button"
                 data-current={i === idx}
                 onClick={() => {
+                  cueSound("tick");
                   onClose();
                   stage.jump(act.goto);
                 }}
@@ -117,24 +121,30 @@ function Programme({ open, onClose, acts }: { open: boolean; onClose: () => void
   );
 }
 
-export function Chrome({ acts = DEFAULT_ACTS }: { acts?: ActMark[] }) {
+export function Chrome({ acts = DEFAULT_ACTS, sound }: { acts?: ActMark[]; sound?: () => Promise<SoundProgram> }) {
   const [open, setOpen] = useState(false);
   return (
     <>
       <header className="th-header">
-        <button
-          type="button"
-          className="th-header__programme"
-          onClick={() => setOpen(true)}
-          aria-haspopup="dialog"
-        >
-          <span className="th-burger" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
-          Programme
-        </button>
+        <div className="th-header__left">
+          <button
+            type="button"
+            className="th-header__programme"
+            onClick={() => {
+              cueSound("page");
+              setOpen(true);
+            }}
+            aria-haspopup="dialog"
+          >
+            <span className="th-burger" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            Programme
+          </button>
+          <SoundToggle acts={acts} loadProgram={sound} />
+        </div>
         <span className="th-header__house">{PLAYBILL.theatre}</span>
         <Annunciator acts={acts} />
       </header>

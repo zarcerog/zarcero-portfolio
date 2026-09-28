@@ -156,6 +156,182 @@ html.lenis body {
 .th-burger i:nth-child(2) {
   width: 10px;
 }
+.th-header__left {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+/* the house sound: a round brass button beside the programme */
+.th-sound {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  border: 1px solid rgba(201, 154, 62, 0.8);
+  border-radius: 999px;
+  background: rgba(20, 5, 7, 0.35);
+  color: var(--cream);
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+.th-sound:hover {
+  background: var(--gold);
+  color: var(--ink);
+}
+.th-sound:focus-visible,
+.th-header__programme:focus-visible {
+  outline: 2px solid var(--gold-hi);
+  outline-offset: 3px;
+}
+.th-sound svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.th-sound__horn {
+  fill: currentColor;
+  stroke: none;
+}
+.th-sound__waves path {
+  transform-origin: 12px 12px;
+  transition: opacity 0.3s;
+}
+.th-sound__mute {
+  transition: opacity 0.3s;
+}
+.th-sound[data-on="false"] .th-sound__waves path {
+  opacity: 0;
+}
+.th-sound[data-on="true"] .th-sound__mute {
+  opacity: 0;
+}
+.th-sound[data-on="true"] .th-sound__waves path {
+  animation: th-sound-wave 1.9s ease-in-out infinite;
+}
+.th-sound[data-on="true"] .th-sound__waves path:nth-child(2) {
+  animation-delay: 0.35s;
+}
+@keyframes th-sound-wave {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+/* on a first visit, the button gently asks to be pressed */
+.th-sound[data-invite="true"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--gold-hi);
+  animation: th-sound-invite 2.2s ease-out 2.5s 4 both;
+  pointer-events: none;
+}
+@keyframes th-sound-invite {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+/* the usher's note: a little card hanging under the sound button */
+.th-usher {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 0;
+  width: min(270px, calc(100vw - 2 * var(--side)));
+  padding: 14px 16px 12px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--gold);
+  box-shadow: inset 0 0 0 4px var(--cream), inset 0 0 0 5px rgba(201, 154, 62, 0.7), 0 14px 30px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  animation: th-usher-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 2.2s both;
+}
+.th-usher__kicker {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #8a1c22;
+}
+.th-usher__text {
+  margin: 6px 0 10px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.25;
+}
+.th-usher__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+}
+.th-usher__yes,
+.th-usher__no {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.th-usher__yes {
+  padding: 7px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--cream);
+  transition: background 0.25s, color 0.25s;
+}
+.th-usher__yes:hover {
+  background: #8a1c22;
+  border-color: #8a1c22;
+}
+.th-usher__no {
+  padding: 7px 2px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  opacity: 0.65;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.th-usher__no:hover {
+  opacity: 1;
+}
+.th-usher__yes:focus-visible,
+.th-usher__no:focus-visible {
+  outline: 2px solid #8a1c22;
+  outline-offset: 2px;
+}
+@keyframes th-usher-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 .th-header__house {
   position: absolute;
   left: 50%;
@@ -516,6 +692,19 @@ html.lenis body {
     font-size: 10px;
     letter-spacing: 0.2em;
   }
+  .th-sound {
+    width: 32px;
+    height: 32px;
+  }
+  /* on a phone the note waits at the foot of the stage, clear of the narrator */
+  .th-usher {
+    position: fixed;
+    top: auto;
+    bottom: 76px;
+    left: 50%;
+    width: min(300px, calc(100vw - 2 * var(--side)));
+    margin-left: calc(min(300px, calc(100vw - 2 * var(--side))) / -2);
+  }
   .th-annunciator__num {
     min-width: 28px;
     font-size: 15px;
@@ -535,6 +724,10 @@ html.lenis body {
   .th-header__programme {
     padding: 5px 10px;
   }
+  .th-sound {
+    width: 28px;
+    height: 28px;
+  }
   .th-annunciator {
     transform: scale(0.85);
     transform-origin: 100% 50%;
@@ -542,7 +735,10 @@ html.lenis body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .th-annunciator__num {
+  .th-annunciator__num,
+  .th-sound[data-on="true"] .th-sound__waves path,
+  .th-sound[data-invite="true"]::after,
+  .th-usher {
     animation: none;
   }
   .th-programme,

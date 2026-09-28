@@ -845,6 +845,16 @@
   font-style: italic;
   font-size: 22px;
 }
+.ov-loader__sound {
+  margin-top: 0.9em;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--velvet);
+  opacity: 0.8;
+}
 .ov-loader__dots i {
   display: inline-block;
   width: 4px;

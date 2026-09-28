@@ -12,6 +12,8 @@ import { loadFonts, setFonts, type FontSet } from "./lib/fonts";
 import { Overlays } from "./overlay/Overlays";
 
 const loadScene = () => import("./Scene");
+// the sound plot is fetched only when somebody turns the sound on
+const loadSound = () => import("./soundProgram").then((m) => m.PROGRAM);
 const Scene = dynamic(loadScene, { ssr: false });
 // the flat production is only fetched when WebGL is missing (or with ?flat)
 const Theatre = dynamic(() => import("@/theatre/Theatre"), { ssr: false });
@@ -40,6 +42,10 @@ function Loader({ ready }: { ready: boolean }) {
             <i />
             <i />
           </span>
+        </p>
+        <p className="ov-loader__sound">
+          <span aria-hidden="true">♪ </span>
+          {INTRO.sound}
         </p>
       </div>
     </div>
@@ -77,7 +83,7 @@ export default function Stage3D({ fontClass, fonts }: { fontClass: string; fonts
         {/* film grain and vignette, done in CSS instead of a post-processing pass */}
         <div className="st-film" aria-hidden="true" />
         <Overlays />
-        <Chrome acts={ACTS3D} />
+        <Chrome acts={ACTS3D} sound={loadSound} />
         <Loader ready={ready} />
       </StageProvider>
     </div>

@@ -393,4 +393,5 @@ export const INTRO = {
   loading: "The house is filling up",
   loaded: "Kindly take your seat",
   hint: "Scroll to raise the curtain",
+  sound: "Best enjoyed with the sound on",
 };
