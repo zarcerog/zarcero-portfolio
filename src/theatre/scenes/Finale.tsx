@@ -6,6 +6,7 @@ import { useMemo, useRef, useState } from "react";
 import { CREDITS, CREDITS_DISCLAIMER, PLAYBILL } from "../content";
 import { useOnStage, useStage, useTick } from "../engine";
 import { easeBack, easeIn, envelope, lerp, seg } from "../motion";
+import { cueSound } from "../sound/bus";
 import { telegraphese } from "../telegraph";
 import { CUES } from "../timeline";
 
@@ -84,7 +85,7 @@ export function Telegram() {
             <span className="th-telegram__tape">{body}</span>
           </p>
           <div className="th-telegram__foot">
-            <a className="th-button th-button--ink" href={href}>
+            <a className="th-button th-button--ink" href={href} onClick={() => cueSound("telegraph")}>
               Send by telegraph <span aria-hidden="true">→</span>
             </a>
             <p className="th-telegram__reply">Replies within 24–48 hours, weather permitting.</p>

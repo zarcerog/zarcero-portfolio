@@ -18,6 +18,7 @@ import {
   SPEAKERS,
 } from "@/theatre/content";
 import { useStage, useTick } from "@/theatre/engine";
+import { cueSound } from "@/theatre/sound/bus";
 import { telegraphese } from "@/theatre/telegraph";
 
 import { LINES, Q, roomCue, workCue } from "../cues";
@@ -349,7 +350,7 @@ function Telegram() {
         <p className="ov-telegram__tape" aria-live="polite">
           {body}
         </p>
-        <a className="th-button th-button--ink" href={href}>
+        <a className="th-button th-button--ink" href={href} onClick={() => cueSound("telegraph")}>
           Send by telegraph <span aria-hidden="true">→</span>
         </a>
       </div>
