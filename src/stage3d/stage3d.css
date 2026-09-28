@@ -1,0 +1,1065 @@
+/* ==========================================================================
+   THE ZARCERO THEATRE — 3D production
+   The WebGL stage sits in a fixed canvas; everything readable is DOM,
+   laid over it as programme cards, captions and forms.
+   ========================================================================== */
+
+.st-root {
+  --paper-bg: #f6ecd6;
+  --gap: clamp(14px, 3.5vw, 56px);
+}
+
+.st-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #060203;
+}
+.st-canvas canvas {
+  display: block;
+  touch-action: pan-y;
+}
+
+/* grain + vignette: a static noise tile nudged about in steps — nearly free */
+.st-film {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 55%, rgba(6, 1, 2, 0.62) 100%);
+}
+.st-film::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: st-grain 0.9s steps(6) infinite;
+}
+@keyframes st-grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -2%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+.st-root .th-header {
+  position: fixed;
+  z-index: 6;
+}
+
+/* --------------------------------------------------------------------------
+   Overlay cards
+   -------------------------------------------------------------------------- */
+
+.ov-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  font-size: clamp(13px, 0.35vw + 11px, 16px);
+}
+
+.ov {
+  position: absolute;
+  pointer-events: auto;
+  will-change: opacity, transform;
+}
+
+.ov-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ov-top {
+  top: calc(var(--hdr) + 14px);
+  left: 50%;
+  width: min(700px, calc(100vw - 2 * var(--gap)));
+  transform: translate(-50%, var(--rise, 0));
+}
+.ov-side {
+  right: var(--gap);
+  top: 50%;
+  width: min(420px, 36vw);
+  max-height: calc(100vh - var(--hdr) - 48px);
+  overflow: auto;
+  transform: translateY(calc(-50% + var(--rise, 0px)));
+}
+.ov-bottom {
+  bottom: clamp(16px, 4vh, 40px);
+  left: 50%;
+  width: min(660px, calc(100vw - 2 * var(--gap)));
+  transform: translate(-50%, var(--rise, 0));
+}
+.ov-center {
+  left: 50%;
+  top: 50%;
+  width: min(560px, calc(100vw - 2 * var(--gap)));
+  max-height: calc(100vh - var(--hdr) - 40px);
+  overflow: auto;
+  transform: translate(-50%, calc(-50% + var(--rise, 0px)));
+}
+
+.ov-paper {
+  padding: 1.3em 1.5em 1.4em;
+  background:
+    radial-gradient(ellipse at 30% 0%, #fdf8ea, transparent 70%),
+    var(--paper-bg);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow:
+    inset 0 0 0 5px var(--paper-bg),
+    inset 0 0 0 6px var(--gold),
+    0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+.ov-kicker {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.66em;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--velvet);
+  margin-bottom: 0.5em;
+}
+.ov-kicker--ink {
+  color: var(--ink);
+  margin: 0.4em 0 1em;
+}
+.ov-kicker--teal {
+  color: var(--teal-lo);
+}
+.ov-display {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1;
+  color: var(--velvet);
+}
+.ov-display--sm {
+  font-style: normal;
+  color: var(--ink);
+  font-size: clamp(26px, 2.6vw, 40px);
+}
+.ov-display--xl {
+  font-size: clamp(40px, 6vw, 72px);
+}
+.ov-sub {
+  margin-top: 0.3em;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.08em;
+}
+.ov-body {
+  margin-top: 0.8em;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.98em;
+  line-height: 1.45;
+}
+.ov-note {
+  margin-top: 0.8em;
+  font-family: var(--type);
+  font-size: 0.84em;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+.ov-personae .ov-note {
+  padding-top: 0.9em;
+  border-top: 1px solid rgba(43, 26, 23, 0.2);
+}
+.ov-personae .th-cast__row dt {
+  font-size: 0.74em;
+}
+
+.ov-narration {
+  padding: 0.9em 1.3em 1em;
+  background: var(--paper-bg);
+  border: 1.5px solid var(--ink);
+  box-shadow: 6px 6px 0 rgba(20, 8, 6, 0.85), 0 20px 50px rgba(0, 0, 0, 0.5);
+  color: var(--ink);
+}
+.ov-narration__lines {
+  display: grid;
+}
+.ov-narration__lines p {
+  grid-area: 1 / 1;
+  font-family: var(--type);
+  font-size: clamp(14px, 0.5vw + 11px, 18px);
+  line-height: 1.5;
+  opacity: 0;
+}
+
+.ov-room .ov-swap {
+  animation: ov-swap 0.5s ease;
+}
+@keyframes ov-swap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.ov-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 1em;
+}
+.ov-dots li {
+  width: 18px;
+  height: 3px;
+  background: rgba(43, 26, 23, 0.2);
+}
+.ov-dots li[data-on="true"] {
+  background: var(--velvet);
+}
+
+.ov-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  margin: 1em 0 1.1em;
+}
+.ov-stack li {
+  padding: 0.25em 0.65em;
+  border: 1px solid var(--ink);
+  border-radius: 99px;
+  font-family: var(--type);
+  font-size: 0.74em;
+}
+.ov-work .th-button {
+  font-size: 0.7em;
+}
+
+.ov-interval {
+  text-align: center;
+  border-color: var(--teal-lo);
+}
+.ov-interval .ov-display--xl {
+  font-size: clamp(36px, 4.4vw, 60px);
+}
+.ov-menu {
+  margin-top: 1.1em;
+  padding: 1em 1.2em 0.9em;
+  background: #2f4a4b;
+  color: var(--cream);
+  border: 6px solid #6b4c3b;
+}
+.ov-menu__title {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.78em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin-bottom: 0.7em;
+}
+.ov-menu ul {
+  display: grid;
+  gap: 0.3em;
+  text-align: left;
+}
+.ov-menu li {
+  display: flex;
+  align-items: baseline;
+  font-size: 0.86em;
+}
+.ov-menu__name {
+  font-family: var(--sans);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ov-menu__note {
+  font-family: var(--type);
+  font-size: 0.86em;
+  color: var(--gold-hi);
+  white-space: nowrap;
+}
+.ov-menu__foot {
+  margin-top: 0.8em;
+  font-family: var(--type);
+  font-size: 0.68em;
+  opacity: 0.7;
+}
+
+/* rehearsal index cards, pinned either side of the ghost light */
+.ov-board {
+  inset: calc(var(--hdr) + 40px) var(--gap) 12vh;
+  display: grid;
+  grid-template-columns: minmax(0, 230px) 1fr minmax(0, 230px);
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  gap: 26px 18px;
+  align-content: center;
+  pointer-events: none;
+}
+.ov-index:nth-child(1) {
+  grid-area: 1 / 1;
+}
+.ov-index:nth-child(2) {
+  grid-area: 2 / 1;
+}
+.ov-index:nth-child(3) {
+  grid-area: 1 / 3;
+}
+.ov-index:nth-child(4) {
+  grid-area: 2 / 3;
+}
+.ov-index {
+  position: relative;
+  pointer-events: auto;
+  padding: 1.5em 1em 1.6em;
+  background:
+    linear-gradient(transparent 2.1em, rgba(200, 60, 60, 0.45) 2.1em calc(2.1em + 1px), transparent calc(2.1em + 1px)),
+    repeating-linear-gradient(transparent 0 1.35em, rgba(90, 130, 170, 0.22) 1.35em calc(1.35em + 1px)),
+    var(--tint);
+  color: var(--ink);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+}
+.ov-index__pin {
+  position: absolute;
+  top: 0.45em;
+  left: 50%;
+  width: 0.9em;
+  height: 0.9em;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f07b7b, #a3232e 60%, #5e0f15);
+  box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.45);
+}
+.ov-index__medium {
+  margin-top: 0.3em;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.58em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--velvet);
+}
+.ov-index__title {
+  margin: 0.25em 0 0.35em;
+  font-family: var(--serif);
+  font-weight: 900;
+  font-size: 1.5em;
+  line-height: 1.05;
+}
+.ov-index__line {
+  font-family: var(--type);
+  font-size: 0.78em;
+  line-height: 1.35;
+}
+.ov-index__tech {
+  margin-top: 0.7em;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.56em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.ov-index__stamp {
+  position: absolute;
+  right: 0.5em;
+  bottom: -0.6em;
+  padding: 0.2em 0.5em;
+  border: 2px solid var(--velvet);
+  color: var(--velvet);
+  background: rgba(246, 236, 214, 0.8);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 0.52em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transform: rotate(-7deg);
+}
+
+/* the telegram */
+.ov-telegram {
+  display: grid;
+  gap: 0.55em;
+  padding: 1.2em 1.4em 1.2em;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.45), transparent 60%),
+    #f2e0a0;
+  color: var(--ink);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  width: min(460px, 40vw);
+  grid-template-columns: minmax(0, 1fr);
+}
+.ov-telegram__head {
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.3em 0 0.4em;
+  text-align: center;
+}
+.ov-telegram__brand {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(20px, 2.3vw, 34px);
+  letter-spacing: 0.42em;
+  padding-left: 0.42em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.ov-telegram__meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--type);
+  font-size: 0.68em;
+  text-transform: uppercase;
+}
+.ov-telegram__row {
+  display: grid;
+  grid-template-columns: 5.5em 1fr;
+  align-items: baseline;
+  gap: 0.6em;
+}
+.ov-telegram__row--msg {
+  align-items: start;
+}
+.ov-telegram__label {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.6em;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+.ov-telegram__row--msg .ov-telegram__label {
+  padding-top: 0.7em;
+}
+.ov-telegram__value {
+  font-family: var(--type);
+  font-size: 0.86em;
+}
+.ov-telegram input,
+.ov-telegram textarea {
+  width: 100%;
+  font-family: var(--type);
+  font-size: max(16px, 0.9em);
+  text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.4);
+  border: 0;
+  border-bottom: 1.5px dashed rgba(43, 26, 23, 0.55);
+  padding: 0.3em 0.4em;
+  resize: none;
+  border-radius: 0;
+}
+.ov-telegram input::placeholder,
+.ov-telegram textarea::placeholder {
+  color: rgba(43, 26, 23, 0.4);
+}
+.ov-telegram__tape {
+  justify-self: start;
+  max-width: 100%;
+  padding: 0.35em 0.6em;
+  background: #fbf6e6;
+  font-family: var(--type);
+  font-weight: 700;
+  font-size: 0.74em;
+  line-height: 1.5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  max-height: 4.8em;
+  overflow: hidden;
+}
+.ov-telegram__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8em;
+  margin-top: 0.3em;
+}
+.ov-stamps {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.ov-stamps .th-stamp {
+  width: 44px;
+}
+.ov-telegram__reply {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.86em;
+}
+.ov-telegram__reply a {
+  font-style: normal;
+  font-family: var(--type);
+  font-size: 0.92em;
+}
+
+/* the curtain call */
+.ov-bowline {
+  left: 50%;
+  bottom: 12vh;
+  transform: translate(-50%, var(--rise, 0));
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.3em;
+  color: var(--cream);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.ov-credits {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ov-credits__roll {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: min(520px, 86vw);
+  transform: translate(-50%, 0);
+  text-align: center;
+  color: var(--cream);
+  text-shadow: 0 2px 12px rgba(10, 0, 0, 0.9);
+}
+.ov-credits__house {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.74em;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+}
+.ov-credits__title {
+  margin: 0.2em 0 3em;
+  font-family: var(--serif);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(30px, 4vw, 54px);
+  line-height: 1.05;
+}
+.ov-credits__block {
+  margin-bottom: 2.4em;
+}
+.ov-credits__role {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.66em;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin-bottom: 0.4em;
+}
+.ov-credits__name {
+  font-family: var(--serif);
+  font-size: clamp(19px, 2vw, 28px);
+  line-height: 1.25;
+}
+.ov-credits__disclaimer {
+  margin: 3em auto 40vh;
+  max-width: 30em;
+  font-family: var(--type);
+  font-size: 0.8em;
+  line-height: 1.5;
+}
+.ov-fin::before {
+  content: "";
+  position: absolute;
+  inset: -30% -40%;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(8, 2, 3, 0.72), transparent 65%);
+}
+.ov-fin {
+  left: 50%;
+  top: 50%;
+  width: min(520px, 90vw);
+  transform: translate(-50%, calc(-50% + var(--rise, 0px)));
+  display: grid;
+  justify-items: center;
+  gap: 1.1em;
+  text-align: center;
+  color: var(--cream);
+}
+.ov-fin .th-rule {
+  width: 60%;
+  color: var(--gold-hi);
+}
+.ov-fin__word {
+  font-family: var(--serif);
+  font-weight: 900;
+  font-style: italic;
+  font-size: clamp(72px, 12vw, 150px);
+  line-height: 0.9;
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.8);
+}
+.ov-fin__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8em;
+}
+.ov-fin__archive {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.5em 0.9em 0.5em 0.5em;
+  background: rgba(20, 5, 7, 0.6);
+  border: 1px solid rgba(240, 215, 140, 0.5);
+  text-decoration: none;
+  text-align: left;
+}
+.ov-fin__archive-img {
+  width: 72px;
+  flex: none;
+  line-height: 0;
+  border: 2px solid var(--gold);
+}
+.ov-fin__archive-img img {
+  width: 100%;
+  height: auto;
+}
+.ov-fin__archive em {
+  display: block;
+  font-style: normal;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.58em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+}
+.ov-fin__archive b {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+}
+.ov-fin__copy {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.62em;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.ov-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(20, 5, 7, 0.6);
+  border: 1px solid rgba(201, 154, 62, 0.5);
+  color: var(--cream);
+  font-family: var(--type);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.ov-hint i {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  animation: th-nudge 1.6s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   The script (top centre) and mirrored pairs of cards
+   -------------------------------------------------------------------------- */
+
+.ov-script {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ov-script__line {
+  position: absolute;
+  top: calc(var(--hdr) + 14px);
+  left: 50%;
+  width: min(640px, calc(100vw - 2 * var(--gap)));
+  transform: translate(-50%, 0);
+  padding: 0.8em 1.4em 0.95em;
+  text-align: center;
+  background: var(--paper-bg);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  box-shadow: 6px 6px 0 rgba(20, 8, 6, 0.85), 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.ov-script__line--nico {
+  background: #f3e7c9;
+  border-color: var(--velvet);
+  box-shadow: 6px 6px 0 rgba(120, 20, 30, 0.8), 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.ov-script__who {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.68em;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--velvet);
+  margin-bottom: 0.4em;
+}
+.ov-script__who::before,
+.ov-script__who::after {
+  content: " — ";
+  letter-spacing: 0;
+}
+.ov-script__text {
+  font-family: var(--type);
+  font-size: clamp(14px, 0.45vw + 11px, 18px);
+  line-height: 1.5;
+}
+
+.ov-pair {
+  inset: calc(var(--hdr) + 20px) var(--gap) 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  transform: translateY(var(--rise, 0));
+}
+.ov-pair__card {
+  pointer-events: auto;
+  width: min(360px, 29vw);
+  max-height: 100%;
+  overflow: auto;
+}
+.ov-pair__card--left {
+  text-align: right;
+}
+.ov-pair__card--left .th-cast__row dt,
+.ov-pair__card--left .ov-dots {
+  text-align: left;
+}
+.ov-pair__card--left .ov-dots {
+  justify-content: flex-end;
+}
+.ov-pair__card--right {
+  text-align: left;
+}
+.ov-year {
+  margin-top: 0.4em;
+  font-family: var(--type);
+  font-size: 0.82em;
+}
+.ov-personae .ov-pair__card--left {
+  text-align: left;
+}
+.ov-interval .ov-pair__card--left {
+  text-align: center;
+}
+.ov-interval .ov-menu {
+  margin-top: 0;
+}
+.ov-interval .ov-pair__card--right {
+  width: min(440px, 36vw);
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+.ov-interval .ov-display--xl {
+  font-size: clamp(30px, 3.3vw, 50px);
+}
+.ov-elsewhere .ov-stamps {
+  margin: 0.8em 0;
+  justify-content: flex-start;
+}
+.ov-telegram-pair .ov-telegram {
+  width: min(420px, 33vw);
+}
+
+/* --------------------------------------------------------------------------
+   The loading curtain
+   -------------------------------------------------------------------------- */
+
+.ov-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  transition: visibility 0s linear 1.8s;
+}
+.ov-loader[data-ready="true"] {
+  visibility: hidden;
+  pointer-events: none;
+}
+.ov-loader__curtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  background:
+    linear-gradient(180deg, rgba(10, 0, 0, 0.55), transparent 22%, transparent 80%, rgba(10, 0, 0, 0.5)),
+    repeating-linear-gradient(90deg, #4a0a10 0, #7d1620 1.4vw, #a3303a 2.5vw, #b8434b 3vw, #7a1a22 4vw, #4a0a10 5.2vw);
+  transition: transform 1.6s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.ov-loader__curtain--l {
+  left: 0;
+  transform-origin: 0 50%;
+}
+.ov-loader__curtain--r {
+  right: 0;
+  transform-origin: 100% 50%;
+}
+.ov-loader[data-ready="true"] .ov-loader__curtain--l {
+  transform: translateX(-102%);
+}
+.ov-loader[data-ready="true"] .ov-loader__curtain--r {
+  transform: translateX(102%);
+}
+.ov-loader__card {
+  position: relative;
+  padding: 1.4em 2.2em;
+  background: var(--paper-bg);
+  border: 3px solid var(--velvet);
+  box-shadow: inset 0 0 0 6px var(--paper-bg), inset 0 0 0 7px var(--gold), 0 20px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: var(--ink);
+  transition: opacity 0.5s, transform 0.8s;
+}
+.ov-loader[data-ready="true"] .ov-loader__card {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.ov-loader__house {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--velvet);
+}
+.ov-loader__line {
+  margin-top: 0.4em;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 22px;
+}
+.ov-loader__dots i {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-left: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ov-dot 1.2s infinite;
+}
+.ov-loader__dots i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.ov-loader__dots i:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes ov-dot {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Phones and portrait windows: the stage sits up top, the programme
+   cards become a sheet along the bottom.
+   -------------------------------------------------------------------------- */
+
+
+/* Act IV: three index cards round the mirror — two left, one right */
+.ov-board--dressing .ov-index:nth-child(1) {
+  grid-area: 1 / 1;
+}
+.ov-board--dressing .ov-index:nth-child(2) {
+  grid-area: 2 / 1;
+}
+.ov-board--dressing .ov-index:nth-child(3) {
+  grid-area: 1 / 3 / 3 / 4;
+  align-self: center;
+}
+.ov-index__rows {
+  display: grid;
+  gap: 0.28em;
+  margin: 0;
+  font-family: var(--type);
+  font-size: 0.74em;
+  line-height: 1.3;
+}
+.ov-index__rows div {
+  display: grid;
+  grid-template-columns: 6.2em 1fr;
+  gap: 0.6em;
+}
+.ov-index__rows dt {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.82em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--velvet);
+  padding-top: 0.12em;
+}
+.ov-index__rows dd {
+  margin: 0;
+}
+
+/* a blackout, for the journey back to our seats */
+.ov-blackout {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  background: #030101;
+  pointer-events: none;
+}
+
+@media (max-width: 760px), (max-aspect-ratio: 9/10) {
+  .ov-layer {
+    font-size: 13px;
+  }
+  .ov-pair {
+    inset: auto 12px 12px;
+    max-height: 48svh;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    gap: 8px;
+    overflow: auto;
+    pointer-events: auto;
+    overscroll-behavior: contain;
+  }
+  .ov-pair__card,
+  .ov-telegram-pair .ov-telegram {
+    width: auto;
+    max-height: none;
+    overflow: visible;
+    text-align: left;
+  }
+  .ov-pair__card--left .ov-dots {
+    justify-content: flex-start;
+  }
+  .ov-interval .ov-pair__card--right {
+    width: auto;
+  }
+  .ov-interval .ov-pair__card--left {
+    text-align: center;
+  }
+  .ov-script__line {
+    top: calc(var(--hdr) + 8px);
+    width: calc(100vw - 24px);
+    padding: 0.7em 1em 0.8em;
+  }
+  .ov-script__text {
+    font-size: 13.5px;
+  }
+  .ov-side {
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: 12px;
+    width: auto;
+    max-height: 50svh;
+    overflow: auto;
+    transform: translateY(var(--rise, 0));
+    overscroll-behavior: contain;
+  }
+  .ov-bottom {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    transform: translateY(var(--rise, 0));
+  }
+  .ov-top {
+    top: calc(var(--hdr) + 8px);
+    width: calc(100vw - 24px);
+  }
+  .ov-paper {
+    padding: 1em 1.1em 1.1em;
+  }
+  .ov-display {
+    font-size: 30px;
+  }
+  .ov-display--sm {
+    font-size: 26px;
+  }
+  .ov-body {
+    font-size: 0.92em;
+  }
+  .ov-center {
+    width: calc(100vw - 24px);
+    max-height: calc(100svh - var(--hdr) - 24px);
+    top: auto;
+    bottom: 12px;
+    transform: translate(-50%, var(--rise, 0));
+  }
+  .ov-menu li {
+    font-size: 0.8em;
+  }
+  .ov-board {
+    inset: auto 12px 12px;
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 12px;
+    font-size: 12px;
+  }
+  .ov-index:nth-child(n),
+  .ov-board--dressing .ov-index:nth-child(n) {
+    grid-area: auto;
+  }
+  .ov-board--dressing .ov-index:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+  .ov-index__tech {
+    display: none;
+  }
+  .ov-telegram {
+    padding: 1em;
+  }
+  .ov-telegram__meta {
+    display: none;
+  }
+  .ov-telegram__row {
+    grid-template-columns: 4.6em 1fr;
+  }
+  .ov-personae .th-cast {
+    font-size: 0.95em;
+  }
+  .ov-note {
+    font-size: 0.8em;
+  }
+  .ov-work .ov-note {
+    display: none;
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .ov-side {
+    max-height: calc(100vh - var(--hdr) - 20px);
+    top: calc(var(--hdr) + 8px);
+    transform: translateY(var(--rise, 0));
+  }
+  .ov-note {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-film::after {
+    animation: none;
+  }
+  .ov-loader__curtain {
+    transition-duration: 0.3s;
+  }
+  .ov-hint i,
+  .ov-loader__dots i,
+  .ov-room .ov-swap {
+    animation: none;
+  }
+}
