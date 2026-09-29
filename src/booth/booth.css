@@ -1,0 +1,1082 @@
+/* ==========================================================================
+   The box office
+   One set, 1600 × 1000 units, scaled to the window. Inside it, 1 unit is
+   var(--u). The floor line is at y 860.
+   ========================================================================== */
+
+html,
+body {
+  margin: 0;
+  background: #e8b3a9;
+}
+
+.bx-root {
+  --bx-sans: var(--f-sans, Jost), Jost, Futura, "Helvetica Neue", sans-serif;
+  --bx-serif: var(--f-serif, "Bodoni Moda"), "Bodoni Moda", Didot, "Times New Roman", serif;
+  --bx-type: var(--f-type, "Courier Prime"), "Courier Prime", "Courier New", monospace;
+  --bx-marquee: var(--f-marquee, Limelight), Limelight, var(--f-serif, "Bodoni Moda"), serif;
+  --bx-anton: var(--f-anton, Anton), Anton, Impact, "Arial Narrow", sans-serif;
+  --bx-marker: var(--f-marker, "Permanent Marker"), "Permanent Marker", "Comic Sans MS", cursive;
+
+  --pink: #e8b3a9;
+  --burgundy: #86192a;
+  --gold: #c9a24a;
+  --cream: #f4e6cb;
+  --yellow: #f2c230;
+  --ink: #241417;
+  --red: #d8262e;
+  --sub: #f7d23e;
+
+  /* the tempo of the opening: quicker for anyone back for a second ticket */
+  --k: 1;
+  --px: 0;
+  --py: 0;
+
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--pink);
+  color: var(--ink);
+  font-family: var(--bx-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+.bx-root[data-quick="true"] {
+  --k: 0.35;
+}
+
+.bx-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* a vignette, and the evening */
+.bx-root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 55%, transparent 55%, rgba(60, 12, 20, 0.34)),
+    linear-gradient(180deg, rgba(40, 10, 30, 0.14), transparent 30%);
+}
+
+/* --------------------------------------------------------------------------
+   The set
+   -------------------------------------------------------------------------- */
+
+.bx-set {
+  --u: calc(100cqw / 1600);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(100vw, 160svh);
+  aspect-ratio: 16 / 10;
+  transform: translate(-50%, -50%);
+  container-type: inline-size;
+}
+
+.bx-layer {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.bx-layer--wall {
+  transform: translate(calc(var(--px) * -0.35%), calc(var(--py) * -0.25%));
+}
+.bx-layer--kiosk {
+  transform: translate(calc(var(--px) * -0.8%), calc(var(--py) * -0.5%));
+}
+.bx-layer--tickets {
+  transform: translate(calc(var(--px) * -1.6%), calc(var(--py) * -1%));
+  pointer-events: none;
+  z-index: 5;
+}
+
+.bx-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* the pavement: Barcelona's flower tiles, receding */
+.bx-floor {
+  position: absolute;
+  left: -200%;
+  right: -200%;
+  top: 86%;
+  height: 160%;
+  overflow: hidden;
+  perspective: calc(700 * var(--u));
+  perspective-origin: 50% 0;
+}
+.bx-floor__plane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 400%;
+  transform-origin: 50% 0;
+  transform: rotateX(64deg);
+  background-color: #b3aca1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23b3aca1'/%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cg stroke='%23cfc9bf' stroke-width='3'%3E%3Cpath d='M40 40 Q50 27 40 13 Q30 27 40 40Z M40 40 Q53 50 67 40 Q53 30 40 40Z M40 40 Q50 53 40 67 Q30 53 40 40Z M40 40 Q27 50 13 40 Q27 30 40 40Z'/%3E%3Ccircle cx='40' cy='40' r='4'/%3E%3Cpath d='M0 12 A12 12 0 0 0 12 0 M68 0 A12 12 0 0 0 80 12 M80 68 A12 12 0 0 0 68 80 M12 80 A12 12 0 0 0 0 68'/%3E%3C/g%3E%3Cg stroke='%23958e83' stroke-width='1.6' transform='translate(1.2 1.6)'%3E%3Cpath d='M40 40 Q50 27 40 13 Q30 27 40 40Z M40 40 Q53 50 67 40 Q53 30 40 40Z M40 40 Q50 53 40 67 Q30 53 40 40Z M40 40 Q27 50 13 40 Q27 30 40 40Z'/%3E%3Cpath d='M0 12 A12 12 0 0 0 12 0 M68 0 A12 12 0 0 0 80 12 M80 68 A12 12 0 0 0 68 80 M12 80 A12 12 0 0 0 0 68'/%3E%3C/g%3E%3C/g%3E%3Crect x='0.5' y='0.5' width='79' height='79' fill='none' stroke='%23857e74' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-size: calc(84 * var(--u)) calc(84 * var(--u));
+  background-position: 50% 0;
+}
+.bx-floor::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse calc(420 * var(--u)) calc(180 * var(--u)) at 50% 0, rgba(255, 214, 140, 0.4), transparent 70%),
+    linear-gradient(180deg, rgba(40, 15, 15, 0.45), rgba(40, 15, 15, 0.08) 6%, transparent 30%);
+}
+
+/* --------------------------------------------------------------------------
+   The wall and the kiosk
+   -------------------------------------------------------------------------- */
+
+.bx-lightcone {
+  mix-blend-mode: soft-light;
+  animation: bx-on 0.6s calc(var(--k) * 0.15s) both;
+}
+.bx-lamp {
+  animation: bx-on 0.3s calc(var(--k) * 0.15s) both;
+}
+.bx-spill {
+  animation: bx-on 1.2s calc(var(--k) * 1.2s) both;
+}
+@keyframes bx-on {
+  from {
+    opacity: 0;
+  }
+}
+
+/* the director has already scrawled on his own poster */
+.bx-scrawl path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bx-draw 0.9s calc(var(--k) * 1.6s) ease-out forwards;
+}
+.bx-scrawl text {
+  animation: bx-on 0.4s calc(var(--k) * 2.3s) both;
+}
+@keyframes bx-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* the marquee bulbs come on, one after the other, and then chase */
+.bx-bulb {
+  animation: bx-bulb 0.2s calc(var(--k) * (0.25s + var(--i) * 0.018s)) both;
+}
+@keyframes bx-bulb {
+  from {
+    opacity: 0.18;
+  }
+}
+.bx-bulb__lamp {
+  fill: #fff4cf;
+}
+.bx-bulb__glow {
+  animation: bx-chase 1.2s linear calc(var(--k) * 1.4s) infinite;
+}
+.bx-bulb:nth-child(3n + 2) .bx-bulb__glow {
+  animation-delay: calc(var(--k) * 1.4s + 0.4s);
+}
+.bx-bulb:nth-child(3n) .bx-bulb__glow {
+  animation-delay: calc(var(--k) * 1.4s + 0.8s);
+}
+@keyframes bx-chase {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0.25;
+  }
+}
+.bx-marquee {
+  animation: bx-flicker 1.1s calc(var(--k) * 0.3s) both;
+}
+@keyframes bx-flicker {
+  0% {
+    opacity: 0.25;
+  }
+  20% {
+    opacity: 1;
+  }
+  26% {
+    opacity: 0.4;
+  }
+  34%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* the roller shutter goes up, with the usual hesitation */
+.bx-shutter {
+  animation: bx-shutter 1.5s cubic-bezier(0.5, 0, 0.3, 1) calc(var(--k) * 0.7s) forwards;
+}
+@keyframes bx-shutter {
+  0% {
+    transform: translateY(0);
+  }
+  14% {
+    transform: translateY(-22px);
+  }
+  22% {
+    transform: translateY(-16px);
+  }
+  100% {
+    transform: translateY(-330px);
+  }
+}
+
+/* the clerk: eyes, lids, moustache, mouth, and a small nod */
+.bx-pupils {
+  transform: translate(calc(var(--px) * 3px), calc(var(--py) * 2px));
+  transition: transform 0.25s ease-out;
+}
+.bx-lids rect {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+  animation: bx-blink 5.3s 2.4s infinite;
+}
+@keyframes bx-blink {
+  0%,
+  95%,
+  100% {
+    transform: scaleY(0);
+  }
+  97% {
+    transform: scaleY(1);
+  }
+}
+.bx-mouth {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+.bx-root[data-talking="true"] .bx-mouth {
+  animation: bx-talk 0.16s ease-in-out infinite alternate;
+}
+@keyframes bx-talk {
+  to {
+    transform: scaleY(3.6) scaleX(0.8);
+  }
+}
+.bx-clerk {
+  transform-origin: 800px 630px;
+  transition: transform 0.6s ease;
+}
+.bx-root[data-talking="true"] .bx-clerk {
+  animation: bx-bob 1.6s ease-in-out infinite;
+}
+@keyframes bx-bob {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-1.2deg);
+  }
+  70% {
+    transform: rotate(1deg);
+  }
+}
+.bx-root[data-chosen="theatre"] .bx-clerk {
+  transform: rotate(-4deg);
+}
+.bx-root[data-chosen="picture"] .bx-clerk {
+  transform: rotate(4deg);
+}
+.bx-root[data-chosen] .bx-brow {
+  transform: translateY(-3px);
+}
+.bx-hand--h,
+.bx-hand--m {
+  transform-origin: 878px 404px;
+}
+.bx-hand--h {
+  transform: rotate(var(--hh, 300deg));
+}
+.bx-hand--m {
+  transform: rotate(var(--mm, 60deg));
+}
+
+/* the bell, and the sound card, on the counter */
+.bx-bell,
+.bx-card,
+.bx-pigeon {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.bx-bell {
+  left: calc(884 / 1600 * 100%);
+  top: calc(580 / 1000 * 100%);
+  width: calc(60 / 1600 * 100%);
+  aspect-ratio: 60 / 44;
+}
+.bx-bell__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 50% 90%;
+}
+.bx-bell__plunger {
+  transform-box: fill-box;
+  transition: transform 0.08s;
+}
+.bx-bell:hover .bx-bell__svg {
+  filter: brightness(1.1);
+}
+.bx-bell.is-rung .bx-bell__plunger {
+  animation: bx-press 0.25s;
+}
+.bx-bell.is-rung .bx-bell__svg {
+  animation: bx-ring 0.6s;
+}
+@keyframes bx-press {
+  40% {
+    transform: translateY(40%);
+  }
+}
+@keyframes bx-ring {
+  15% {
+    transform: rotate(-7deg);
+  }
+  35% {
+    transform: rotate(6deg);
+  }
+  55% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+.bx-bell:focus-visible,
+.bx-card:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.bx-card {
+  left: calc(652 / 1600 * 100%);
+  top: calc(578 / 1000 * 100%);
+  width: calc(78 / 1600 * 100%);
+  height: calc(42 / 1000 * 100%);
+  display: grid;
+  place-content: center;
+  gap: calc(1 * var(--u));
+  background: linear-gradient(180deg, #fbf4e4, #efe1c2);
+  border: calc(1.5 * var(--u)) solid var(--burgundy);
+  box-shadow:
+    inset 0 0 0 calc(2 * var(--u)) #fbf4e4,
+    inset 0 0 0 calc(3 * var(--u)) var(--gold),
+    calc(3 * var(--u)) calc(4 * var(--u)) 0 rgba(40, 10, 10, 0.25);
+  transform: perspective(calc(200 * var(--u))) rotateX(8deg);
+  transform-origin: 50% 100%;
+  text-align: center;
+  line-height: 1;
+}
+.bx-card__k {
+  font-size: calc(8 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--burgundy);
+}
+.bx-card__v {
+  font-family: var(--bx-serif);
+  font-style: italic;
+  font-size: calc(13 * var(--u));
+  color: var(--ink);
+}
+.bx-card[aria-pressed="true"] .bx-card__v {
+  color: var(--burgundy);
+}
+.bx-card:hover {
+  transform: perspective(calc(200 * var(--u))) rotateX(0deg) translateY(-6%);
+}
+
+/* red marker, drawn after the tickets land */
+.bx-notes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.bx-note text {
+  font-family: var(--bx-marker);
+  font-size: 30px;
+  fill: var(--red);
+}
+.bx-note path {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.bx-note--pick text {
+  animation: bx-on 0.3s calc(var(--k) * 3.9s) both;
+}
+.bx-note--pick path {
+  animation: bx-draw 0.45s calc(var(--k) * 4.1s) ease-out forwards;
+}
+.bx-note--bell text {
+  animation: bx-on 0.3s calc(var(--k) * 5.2s + 1.2s) both;
+}
+.bx-note--bell path {
+  animation: bx-draw 0.45s calc(var(--k) * 5.2s + 1.4s) ease-out forwards;
+}
+.bx-root[data-chosen] .bx-note {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* --------------------------------------------------------------------------
+   The pigeon, who has no ticket
+   -------------------------------------------------------------------------- */
+
+.bx-pigeon {
+  top: calc(872 / 1000 * 100%);
+  left: -8%;
+  width: calc(80 / 1600 * 100%);
+  aspect-ratio: 80 / 64;
+  z-index: 4;
+  animation: bx-stroll 46s linear calc(var(--k) * 7s) infinite;
+}
+@keyframes bx-stroll {
+  0% {
+    left: -8%;
+  }
+  38%,
+  48% {
+    left: 30%;
+  }
+  100% {
+    left: 108%;
+  }
+}
+.bx-pigeon__walk {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.bx-pigeon__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.bx-pigeon__head {
+  animation: bx-bob-head 0.5s steps(2) infinite;
+}
+@keyframes bx-bob-head {
+  50% {
+    transform: translate(-4px, 1px);
+  }
+}
+.bx-pigeon__legs {
+  animation: bx-legs 0.5s steps(2) infinite;
+}
+@keyframes bx-legs {
+  50% {
+    transform: translateX(2px) scaleX(-1);
+    transform-origin: 40px 55px;
+  }
+}
+.bx-pigeon[data-state="fly"] {
+  animation-play-state: paused;
+  pointer-events: none;
+}
+.bx-pigeon[data-state="fly"] .bx-pigeon__walk {
+  animation: bx-fly 1.4s cubic-bezier(0.4, 0, 0.8, 0.4) forwards;
+}
+.bx-pigeon[data-state="fly"] .bx-pigeon__wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: bx-flap 0.12s infinite alternate;
+}
+.bx-pigeon[data-state="fly"] .bx-pigeon__shadow {
+  opacity: 0;
+}
+@keyframes bx-fly {
+  15% {
+    transform: translate(10%, -30%);
+  }
+  to {
+    transform: translate(420%, -1500%) rotate(-18deg);
+    opacity: 0;
+  }
+}
+@keyframes bx-flap {
+  to {
+    transform: scaleY(-1.4);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   The tickets
+   -------------------------------------------------------------------------- */
+
+.bx-ticket {
+  --tx: 0;
+  --ty: 0;
+  position: absolute;
+  width: calc(360 / 1600 * 100%);
+  aspect-ratio: 360 / 164;
+  top: calc((725 - 82) / 1000 * 100%);
+  pointer-events: auto;
+  text-decoration: none;
+  color: var(--ink);
+  perspective: calc(900 * var(--u));
+  outline: none;
+  animation: bx-print 0.95s cubic-bezier(0.2, 1.25, 0.4, 1) both;
+}
+.bx-ticket--theatre {
+  --dx: 55.5%;
+  --dy: -66%;
+  left: calc((600 - 180) / 1600 * 100%);
+  rotate: -5deg;
+  animation-delay: calc(var(--k) * 2.3s);
+}
+.bx-ticket--picture {
+  --dx: -55.5%;
+  --dy: -66%;
+  left: calc((1000 - 180) / 1600 * 100%);
+  rotate: 4deg;
+  animation-delay: calc(var(--k) * 2.85s);
+}
+/* out of the slot under the glass, and onto the counter */
+@keyframes bx-print {
+  0% {
+    transform: translate(var(--dx), var(--dy)) scale(0.3, 0.05);
+    opacity: 0;
+  }
+  12% {
+    transform: translate(var(--dx), calc(var(--dy) + 6%)) scale(0.32, 0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.bx-ticket__float {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2),
+    filter 0.45s;
+  filter: drop-shadow(calc(4 * var(--u)) calc(8 * var(--u)) calc(4 * var(--u)) rgba(40, 10, 10, 0.3));
+}
+.bx-ticket:hover .bx-ticket__float,
+.bx-ticket:focus-visible .bx-ticket__float {
+  transform: translateY(-7%) rotateX(calc(var(--ty) * -9deg)) rotateY(calc(var(--tx) * 11deg)) scale(1.05);
+  filter: drop-shadow(calc(10 * var(--u)) calc(26 * var(--u)) calc(14 * var(--u)) rgba(40, 10, 10, 0.34));
+}
+.bx-ticket:hover,
+.bx-ticket:focus-visible {
+  z-index: 2;
+}
+.bx-ticket:focus-visible .bx-ticket__paper {
+  outline: calc(3 * var(--u)) solid var(--red);
+  outline-offset: calc(6 * var(--u));
+}
+
+.bx-ticket__paper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.bx-ticket__main,
+.bx-ticket__stub {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  --n: calc(11 * var(--u));
+}
+.bx-ticket__main {
+  flex: 1;
+  gap: calc(3 * var(--u));
+  padding: calc(16 * var(--u)) calc(18 * var(--u));
+  border-radius: calc(6 * var(--u)) 0 0 calc(6 * var(--u));
+  -webkit-mask:
+    radial-gradient(circle var(--n) at 100% 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--n) at 100% 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(circle var(--n) at 100% 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--n) at 100% 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+}
+.bx-ticket__stub {
+  width: 23%;
+  flex: none;
+  gap: calc(6 * var(--u));
+  flex-direction: row;
+  border-radius: 0 calc(6 * var(--u)) calc(6 * var(--u)) 0;
+  -webkit-mask:
+    radial-gradient(circle var(--n) at 0 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--n) at 0 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  mask:
+    radial-gradient(circle var(--n) at 0 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle var(--n) at 0 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+  background-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.35) 38%, transparent 42%);
+  background-size: calc(6 * var(--u)) calc(9 * var(--u));
+  background-repeat: repeat-y;
+  background-position: 0 50%;
+}
+.bx-ticket__guilloche {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bx-t__house,
+.bx-t__now,
+.bx-t__admit {
+  position: relative;
+  font-family: var(--bx-sans);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-size: calc(10.5 * var(--u));
+  line-height: 1;
+}
+.bx-t__presents,
+.bx-t__sub {
+  position: relative;
+  font-family: var(--bx-serif);
+  font-style: italic;
+  font-size: calc(11 * var(--u));
+  line-height: 1.1;
+}
+.bx-t__sub {
+  font-size: calc(9.5 * var(--u));
+  opacity: 0.85;
+}
+.bx-t__title {
+  position: relative;
+  line-height: 0.95;
+  margin: calc(2 * var(--u)) 0;
+}
+.bx-t__row {
+  position: relative;
+  display: flex;
+  gap: calc(14 * var(--u));
+  margin-top: calc(6 * var(--u));
+  padding-top: calc(6 * var(--u));
+  border-top: calc(1 * var(--u)) solid currentColor;
+  font-family: var(--bx-type);
+  font-weight: 700;
+  font-size: calc(11 * var(--u));
+  line-height: 1;
+}
+.bx-t__row i {
+  display: block;
+  margin-bottom: calc(2 * var(--u));
+  font-family: var(--bx-sans);
+  font-style: normal;
+  font-weight: 600;
+  font-size: calc(6.5 * var(--u));
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.bx-t__admit {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: calc(12 * var(--u));
+  letter-spacing: 0.34em;
+}
+.bx-t__serial {
+  writing-mode: vertical-rl;
+  font-family: var(--bx-type);
+  font-weight: 700;
+  font-size: calc(10 * var(--u));
+  letter-spacing: 0.12em;
+}
+
+/* the play's ticket: cream, burgundy, gold */
+.bx-ticket--theatre .bx-ticket__main {
+  background: #f6ead0;
+  color: var(--burgundy);
+  box-shadow:
+    inset 0 0 0 calc(7 * var(--u)) #f6ead0,
+    inset 0 0 0 calc(9 * var(--u)) var(--burgundy),
+    inset 0 0 0 calc(12 * var(--u)) #f6ead0,
+    inset 0 0 0 calc(13 * var(--u)) var(--gold);
+}
+.bx-ticket--theatre .bx-t__title {
+  font-family: var(--bx-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: calc(26 * var(--u));
+  color: var(--ink);
+}
+.bx-ticket--theatre .bx-t__row {
+  color: var(--burgundy);
+}
+.bx-ticket--theatre .bx-ticket__stub {
+  background-color: var(--burgundy);
+  color: #f6ead0;
+}
+
+/* the picture's ticket: yellow and black, and a red circle */
+.bx-ticket--picture .bx-ticket__main {
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow:
+    inset 0 0 0 calc(7 * var(--u)) var(--yellow),
+    inset 0 0 0 calc(10 * var(--u)) var(--ink);
+}
+.bx-ticket--picture .bx-t__now {
+  font-size: calc(9.5 * var(--u));
+  padding: calc(3 * var(--u)) calc(8 * var(--u));
+}
+.bx-ticket--picture .bx-t__title {
+  font-family: var(--bx-anton);
+  text-transform: uppercase;
+  font-size: calc(21 * var(--u));
+  letter-spacing: 0.01em;
+  max-width: 14ch;
+}
+.bx-ticket--picture .bx-ticket__stub {
+  background-color: var(--ink);
+  color: var(--yellow);
+  background-image: radial-gradient(circle at 50% 50%, rgba(242, 194, 48, 0.4) 38%, transparent 42%);
+}
+.bx-t__circle {
+  position: absolute;
+  left: 50%;
+  top: calc(25 * var(--u));
+  width: calc(118 * var(--u));
+  height: calc(30 * var(--u));
+  transform: translateX(-50%) rotate(-3deg);
+  overflow: visible;
+  pointer-events: none;
+}
+.bx-t__circle path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bx-draw 0.6s calc(var(--k) * 3.6s) ease-out forwards;
+}
+
+/* punched, torn, presented */
+.bx-ticket__hole {
+  position: absolute;
+  left: 50%;
+  top: 14%;
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+  margin-left: calc(-7 * var(--u));
+  border-radius: 50%;
+  background: #2b1418;
+  box-shadow: inset 0 calc(2 * var(--u)) calc(2 * var(--u)) rgba(0, 0, 0, 0.6);
+  transform: scale(0);
+}
+.bx-ticket__chad {
+  position: absolute;
+  right: 11%;
+  top: 14%;
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+  border-radius: 50%;
+  opacity: 0;
+}
+.bx-ticket--theatre .bx-ticket__chad {
+  background: var(--burgundy);
+}
+.bx-ticket--picture .bx-ticket__chad {
+  background: var(--ink);
+}
+.bx-ticket[data-state="chosen"] {
+  z-index: 3;
+}
+.bx-ticket[data-state="chosen"] .bx-ticket__hole {
+  animation: bx-punch 0.12s ease-out forwards;
+}
+.bx-ticket[data-state="chosen"] .bx-ticket__chad {
+  animation: bx-chad 0.9s 0.05s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+.bx-ticket[data-state="chosen"] .bx-ticket__stub {
+  animation: bx-tear 1s 0.32s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+}
+.bx-ticket[data-state="chosen"] .bx-ticket__float {
+  animation: bx-present 1.1s 0.45s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+}
+.bx-ticket[data-state="other"] {
+  animation: none;
+  opacity: 0;
+  translate: 0 18%;
+  transition:
+    opacity 0.4s,
+    translate 0.6s;
+}
+@keyframes bx-punch {
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes bx-chad {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(40%, 900%) rotate(200deg) scaleX(0.4);
+  }
+}
+@keyframes bx-tear {
+  0% {
+    transform: none;
+  }
+  12% {
+    transform: translate(4%, -3%) rotate(4deg);
+  }
+  100% {
+    transform: translate(60%, 260%) rotate(36deg);
+    opacity: 0;
+  }
+}
+@keyframes bx-present {
+  to {
+    transform: translateY(-30%) scale(1.25) rotate(3deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   The clerk's lines, in the picture's yellow
+   -------------------------------------------------------------------------- */
+
+.bx-sub {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(16px, 4.5svh, 44px);
+  z-index: 30;
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  pointer-events: none;
+}
+.bx-sub span {
+  max-width: min(46ch, 88vw);
+  text-align: center;
+  font-family: var(--bx-sans);
+  font-weight: 500;
+  font-size: clamp(16px, 1.7vw, 26px);
+  line-height: 1.32;
+  color: var(--sub);
+  text-wrap: balance;
+  text-shadow:
+    0 0 1px #000,
+    1px 1px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    0 2px 10px rgba(0, 0, 0, 0.55);
+  animation: bx-on 0.18s both;
+}
+
+.bx-foot {
+  position: absolute;
+  right: clamp(14px, 2vw, 28px);
+  bottom: clamp(12px, 2svh, 22px);
+  z-index: 31;
+}
+.bx-foot a {
+  font-family: var(--bx-type);
+  font-size: 12px;
+  color: rgba(60, 12, 20, 0.75);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(60, 12, 20, 0.3);
+}
+.bx-foot a:hover,
+.bx-foot a:focus-visible {
+  color: var(--burgundy);
+  border-color: var(--burgundy);
+}
+
+/* --------------------------------------------------------------------------
+   The ways out: velvet for the play, an iris for the pictures
+   -------------------------------------------------------------------------- */
+
+.bx-curtains,
+.bx-iris {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+.bx-curtains__l,
+.bx-curtains__r {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  background:
+    linear-gradient(180deg, rgba(10, 0, 0, 0.55), transparent 22%, transparent 80%, rgba(10, 0, 0, 0.5)),
+    repeating-linear-gradient(90deg, #4a0a10 0, #7d1620 1.4vw, #a3303a 2.5vw, #b8434b 3vw, #7a1a22 4vw, #4a0a10 5.2vw);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+  transition: transform 1.1s cubic-bezier(0.6, 0, 0.25, 1) 0.55s;
+}
+.bx-curtains__l {
+  left: 0;
+  transform: translateX(-104%);
+}
+.bx-curtains__r {
+  right: 0;
+  transform: translateX(104%);
+}
+.bx-curtains__pelmet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 12svh;
+  background:
+    radial-gradient(ellipse 50% 100% at 50% 0, #a3303a 60%, transparent 62%) 0 100% / 12vw 5svh repeat-x,
+    linear-gradient(180deg, #4a0a10, #7d1620);
+  border-bottom: 4px solid var(--gold);
+  transform: translateY(-110%);
+  transition: transform 0.7s cubic-bezier(0.5, 0, 0.3, 1) 0.4s;
+}
+.bx-root[data-chosen="theatre"] .bx-curtains__l,
+.bx-root[data-chosen="theatre"] .bx-curtains__r {
+  transform: none;
+}
+.bx-root[data-chosen="theatre"] .bx-curtains__pelmet {
+  transform: none;
+}
+
+.bx-iris__yellow,
+.bx-iris__black {
+  position: absolute;
+  inset: 0;
+  clip-path: circle(0 at 50% 62%);
+  transition: clip-path 0.9s cubic-bezier(0.6, 0, 0.3, 1) 0.6s;
+}
+.bx-iris__yellow {
+  background: var(--yellow);
+}
+.bx-iris__black {
+  background: #070506;
+  transition-delay: 0.95s;
+}
+.bx-iris__word {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--bx-anton);
+  font-size: clamp(34px, 7vw, 110px);
+  text-transform: uppercase;
+  color: var(--yellow);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transition: opacity 0.3s 1.35s;
+}
+.bx-root[data-chosen="picture"] .bx-iris__yellow,
+.bx-root[data-chosen="picture"] .bx-iris__black {
+  clip-path: circle(150% at 50% 62%);
+}
+.bx-root[data-chosen="picture"] .bx-iris__word {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Portrait: step up to the window
+   -------------------------------------------------------------------------- */
+
+@media (max-aspect-ratio: 1/1) {
+  .bx-set {
+    width: min(290vw, 150svh);
+  }
+  .bx-ticket--theatre,
+  .bx-ticket--picture {
+    left: calc((800 - 210) / 1600 * 100%);
+    width: calc(420 / 1600 * 100%);
+    --u: calc(100cqw / 1600 * 420 / 360);
+  }
+  .bx-ticket--theatre {
+    --dx: 0%;
+    --dy: -65%;
+    top: calc((740 - 95) / 1000 * 100%);
+    rotate: -3deg;
+  }
+  .bx-ticket--picture {
+    --dx: 0%;
+    --dy: -150%;
+    top: calc((905 - 95) / 1000 * 100%);
+    rotate: 2.5deg;
+  }
+  .bx-note--pick {
+    display: none;
+  }
+  .bx-note--bell {
+    display: none;
+  }
+  .bx-sub {
+    bottom: auto;
+    top: max(10px, calc(50svh - 0.5 * min(181.25vw, 93.75svh) + 4px));
+  }
+  .bx-sub span {
+    font-size: 15px;
+    max-width: 92vw;
+  }
+  .bx-pigeon {
+    top: calc(1000 / 1000 * 100%);
+  }
+  .bx-foot {
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bx-root *,
+  .bx-root *::before,
+  .bx-root *::after {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition: none !important;
+  }
+  .bx-pigeon {
+    display: none;
+  }
+}

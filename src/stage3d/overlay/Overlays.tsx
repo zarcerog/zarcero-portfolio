@@ -430,6 +430,11 @@ function Fin() {
           </b>
         </span>
       </a>
+      <p className="ov-fin__also">
+        <a href="/works">Also showing tonight: The Picture House →</a>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- a hard cut between productions */}
+        <a href="/">Box office</a>
+      </p>
       <p className="ov-fin__copy">
         © {PLAYBILL.archive.year} {PLAYBILL.name}
       </p>

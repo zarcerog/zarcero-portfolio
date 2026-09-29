@@ -2,20 +2,21 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 
 // The root layout is deliberately neutral: each "production" brings its own
-// stylesheet and typefaces. The current show lives at `/`, previous ones under
+// stylesheet and typefaces. The box office lives at `/`; the play at
+// `/theatre`, the pictures under `/works`, previous productions under
 // `/archive/<n>`. Links between productions use plain <a> tags (hard
 // navigation) so their global styles never share a document.
 
 export const metadata: Metadata = {
-  title: "Nicolás Zarcero — A Portfolio in Five Acts",
+  title: "Nicolás Zarcero — Box Office",
   description:
-    "The Zarcero Theatre presents Nicolás Zarcero, engineer and designer, in a portfolio in five acts, with an intermission.",
+    "Two shows tonight: a portfolio in five acts, with an intermission; and a picture about a church that is running late. Nicolás Zarcero, engineer and designer.",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "Nicolás Zarcero — A Portfolio in Five Acts",
-    description: "Engineer, designer, and self-appointed stage manager of too many side projects.",
+    title: "Nicolás Zarcero — Box Office",
+    description: "Two shows tonight. One ticket each, please.",
     url: "https://zarcerog.com",
     siteName: "zarcerog.com",
     locale: "en_US",
@@ -23,8 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nicolás Zarcero — A Portfolio in Five Acts",
-    description: "Engineer, designer, and self-appointed stage manager of too many side projects.",
+    title: "Nicolás Zarcero — Box Office",
+    description: "Two shows tonight. One ticket each, please.",
   },
   metadataBase: new URL("https://zarcerog.com"),
 };

@@ -391,16 +391,16 @@ export class Effects {
         for (let t = 0; t < roll; t += 1 / 26) this.o.note({ inst: "snare", step: 0, midi: 60, dur: 0.5, vel: 0.12 + 0.7 * (t / roll) ** 1.5 }, when + t);
         for (let t = 0.6; t < roll; t += 1 / 14) this.o.note({ inst: "timp", step: 0, midi: 45, dur: 1, vel: 0.15 + 0.35 * (t / roll) }, when + t);
         const hit = when + roll;
-        this.cymbal(hit, 0.45);
+        this.cymbal(hit, 0.38);
         this.tutti(
           hit,
           [
-            ["bass", ["D2"], 1],
-            ["timp", ["D3"], 0.9],
-            ["guitar", ["D4", "F#4", "A4", "D5"], 0.6],
-            ["cimbalom", ["D5", "F#5", "A5"], 0.7],
-            ["glock", ["D6", "F#6", "A6", "D7"], 0.55],
-            ["organ", ["D3", "A3", "D4", "F#4"], 0.5],
+            ["bass", ["D2"], 0.9],
+            ["timp", ["D3"], 0.8],
+            ["guitar", ["D4", "F#4", "A4", "D5"], 0.5],
+            ["cimbalom", ["D5", "F#5", "A5"], 0.6],
+            ["glock", ["D6", "F#6", "A6", "D7"], 0.42],
+            ["organ", ["D3", "A3", "D4", "F#4"], 0.45],
           ],
           2.6,
         );
