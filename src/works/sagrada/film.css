@@ -410,8 +410,13 @@ html.lenis body {
   top: 50%;
   transform: translateY(-54%) rotate(-3deg);
   width: auto;
-  height: min(72vh, 58vw);
+  /* as tall as the screen allows, but never wider than the room beside the strip */
+  height: min(72vh, calc((100vw - clamp(92px, 13vw, 190px) - 7vw) * 0.64));
   overflow: visible;
+}
+/* the five-line title is for phones only (see "Small screens") */
+.sf-poster__title--tall {
+  display: none;
 }
 .sf-poster__word {
   font-family: var(--f-marker-stack);
@@ -963,9 +968,23 @@ html.lenis body {
   .sf-sub__en {
     font-size: 16px;
   }
-  .sf-poster__title {
-    left: calc(clamp(92px, 13vw, 190px) + 2vw);
-    height: 60vh;
+  /* a phone is taller than the title is wide: stack the words, and size the
+     title by the column's width so nothing runs off the right edge */
+  .sf-poster__title--wide {
+    display: none;
+  }
+  .sf-poster__title--tall {
+    display: block;
+    left: calc(clamp(92px, 13vw, 190px) + 3vw);
+    right: auto;
+    top: 36%;
+    width: calc(100vw - clamp(92px, 13vw, 190px) - 8vw);
+    height: auto;
+    max-height: 58vh;
+    transform: translateY(-50%) rotate(-3deg);
+  }
+  .sf-poster__blot--c {
+    top: 5vh;
   }
 }
 
@@ -1102,13 +1121,16 @@ html.lenis body {
     0 2px 8px rgba(0, 0, 0, 0.75);
 }
 
+/* under the title, at the foot of the poster: beside it, it ran across the
+   lettering on anything narrower than a very wide desktop */
 .sf-invite {
   position: fixed;
   z-index: 7;
-  right: 5vw;
-  top: 30vh;
+  left: calc(clamp(92px, 13vw, 190px) + 4vw);
+  bottom: 8vh;
   transform: rotate(-5deg);
-  text-align: right;
+  transform-origin: 0 100%;
+  text-align: left;
   font-family: var(--f-marker-stack);
   color: var(--marker);
   max-width: 280px;
@@ -1122,9 +1144,10 @@ html.lenis body {
   margin-top: 10px;
   display: flex;
   gap: 14px;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .sf-invite button {
+  white-space: nowrap;
   font-family: var(--f-marker-stack);
   font-size: clamp(15px, 1.5vw, 21px);
   color: var(--marker);
@@ -1169,9 +1192,28 @@ html.lenis body {
   .sf-lang__opt[aria-pressed="false"] {
     display: none;
   }
+  /* on a phone it goes to the right, between the title and the notes */
   .sf-invite {
-    top: auto;
-    bottom: 26vh;
+    left: auto;
     right: 6vw;
+    bottom: 24vh;
+    transform-origin: 100% 100%;
+    text-align: right;
+  }
+  .sf-invite__actions {
+    justify-content: flex-end;
+  }
+}
+
+/* a phone on its side has no room for the sentence: just the two answers */
+@media (max-height: 480px) {
+  .sf-invite {
+    bottom: 12vh;
+  }
+  .sf-invite__text {
+    display: none;
+  }
+  .sf-invite__actions {
+    margin-top: 0;
   }
 }

@@ -109,7 +109,12 @@ export function Poster() {
     fade(el, envelope(t, TITLE), last.current);
     el.style.setProperty("--peel", String(Math.max(0, Math.min(1, (t - 0.1) / 1.0))));
   });
-  const lines = ["THE CLIENT", "IS NOT IN", "A HURRY"];
+  // three lines on a wide screen; on a phone the same words stack five deep,
+  // so the title fits the narrow column beside the strip instead of running off it
+  const titles = [
+    { kind: "wide", box: "0 0 1000 640", x: 500, y0: 170, step: 190, lines: ["THE CLIENT", "IS NOT IN", "A HURRY"] },
+    { kind: "tall", box: "0 0 760 990", x: 380, y0: 165, step: 188, lines: ["THE", "CLIENT", "IS NOT", "IN A", "HURRY"] },
+  ];
   return (
     <div className="sf-poster" ref={ref}>
       <div className="sf-poster__ink" />
@@ -124,17 +129,19 @@ export function Poster() {
         <Scribble className="sf-poster__blot sf-poster__blot--b" w={120} h={220} seed={9} dense={18} />
         <p className="sf-poster__small">with the Sagrada Família as itself</p>
       </aside>
-      <svg className="sf-poster__title" viewBox="0 0 1000 640" role="img" aria-label="The Client Is Not in a Hurry">
-        {[1, 2, 3].map((k) => (
-          <g key={k} filter={`url(#sf-rough-${k})`} transform={`translate(${(k - 2) * 3} ${(k - 2) * -2})`}>
-            {lines.map((l, i) => (
-              <text key={i} x="500" y={170 + i * 190} textAnchor="middle" className="sf-poster__word" style={{ strokeWidth: 5 - k }}>
-                {l}
-              </text>
-            ))}
-          </g>
-        ))}
-      </svg>
+      {titles.map((t) => (
+        <svg key={t.kind} className={`sf-poster__title sf-poster__title--${t.kind}`} viewBox={t.box} role="img" aria-label="The Client Is Not in a Hurry">
+          {[1, 2, 3].map((k) => (
+            <g key={k} filter={`url(#sf-rough-${k})`} transform={`translate(${(k - 2) * 3} ${(k - 2) * -2})`}>
+              {t.lines.map((l, i) => (
+                <text key={i} x={t.x} y={t.y0 + i * t.step} textAnchor="middle" className="sf-poster__word" style={{ strokeWidth: 5 - k }}>
+                  {l}
+                </text>
+              ))}
+            </g>
+          ))}
+        </svg>
+      ))}
       <Scribble className="sf-poster__blot sf-poster__blot--c" w={160} h={120} seed={21} />
       <p className="sf-poster__note sf-poster__note--a">or, a short history of a very long building</p>
       <p className="sf-poster__note sf-poster__note--b">scroll to roll film ↓</p>
